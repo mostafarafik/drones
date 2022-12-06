@@ -1,4 +1,4 @@
-package com.redcode.drons;
+package com.redcode.drones;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

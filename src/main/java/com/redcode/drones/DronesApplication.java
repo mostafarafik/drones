@@ -1,4 +1,5 @@
-package com.redcode.drons;
+package com.redcode.drones;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
