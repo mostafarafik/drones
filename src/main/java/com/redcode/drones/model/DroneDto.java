@@ -5,13 +5,11 @@ import com.redcode.drones.entities.Medication;
 import com.redcode.drones.enums.Model;
 import com.redcode.drones.enums.State;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.Set;
+import java.util.List;
 
 @Data
 public class DroneDto {
@@ -42,5 +40,5 @@ public class DroneDto {
     private State state;
 
     @JsonProperty("medications")
-    private Set<Medication> medications;
+    private List<Medication> medications;
 }

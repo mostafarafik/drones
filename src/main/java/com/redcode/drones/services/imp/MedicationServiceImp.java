@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -64,7 +65,7 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public Set<MedicationDto> getAllMedications() {
-        return medicationMapper.toDtoList(new HashSet<>(medicationDao.findAll()));
+    public List<MedicationDto> getAllMedications() {
+        return medicationMapper.toDtoList(medicationDao.findAll());
     }
 }

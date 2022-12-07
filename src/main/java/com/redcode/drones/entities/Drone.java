@@ -4,12 +4,8 @@ package com.redcode.drones.entities;
 import com.redcode.drones.enums.Model;
 import com.redcode.drones.enums.State;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 import javax.persistence.*;
-import java.util.Set;
-
+import java.util.List;
 
 @Entity
 @Table(name = "DRONE")
@@ -28,5 +24,5 @@ public class Drone {
     @Enumerated(EnumType.STRING)
     private State state;
     @OneToMany
-    private Set<Medication> medications;
+    private List<Medication> medications;
 }

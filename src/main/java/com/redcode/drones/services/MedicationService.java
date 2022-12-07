@@ -2,6 +2,7 @@ package com.redcode.drones.services;
 
 import com.redcode.drones.model.MedicationDto;
 
+import java.util.List;
 import java.util.Set;
 
 public interface MedicationService {
@@ -14,6 +15,6 @@ public interface MedicationService {
 
     MedicationDto getExistMedicationByCode(String code);
 
-    Set<MedicationDto> getAllMedications();
+    List<MedicationDto> getAllMedications();
 
 }

@@ -4,7 +4,7 @@ import com.redcode.drones.entities.Drone;
 import com.redcode.drones.model.DroneDto;
 import org.mapstruct.Mapper;
 
-import java.util.Set;
+import java.util.List;
 @Mapper(componentModel = "spring",uses = MedicationMapper.class)
 public interface DroneMapper {
 
@@ -12,6 +12,6 @@ public interface DroneMapper {
 
     DroneDto toDto(Drone drone);
 
-    Set<DroneDto> toDtoList(Set<Drone> drones);
+    List<DroneDto> toDtoList(List<Drone> drones);
 
 }
