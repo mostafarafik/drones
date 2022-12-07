@@ -4,13 +4,16 @@ package com.redcode.drones.entities;
 import com.redcode.drones.enums.Model;
 import com.redcode.drones.enums.State;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Set;
 
-@Data
+
 @Entity
 @Table(name = "DRONE")
+@Data
 public class Drone {
 
     @Id

@@ -9,6 +9,9 @@ import javax.validation.constraints.Pattern;
 @Data
 public class MedicationDto {
 
+    @JsonProperty("medicationId")
+    private Integer medicationId;
+
     @JsonProperty("name")
     @NotNull(message = "name Cannot be null")
     @Pattern(regexp = "^[A-Za-z0-9_-]*$", message = "name is Incorrect")

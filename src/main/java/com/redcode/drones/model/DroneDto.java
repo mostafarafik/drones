@@ -5,6 +5,8 @@ import com.redcode.drones.entities.Medication;
 import com.redcode.drones.enums.Model;
 import com.redcode.drones.enums.State;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -13,6 +15,9 @@ import java.util.Set;
 
 @Data
 public class DroneDto {
+
+    @JsonProperty("droneId")
+    private Integer droneId;
 
     @JsonProperty("serialNumber")
     @NotNull(message = "Serial Number Cannot be null")
@@ -38,5 +43,4 @@ public class DroneDto {
 
     @JsonProperty("medications")
     private Set<Medication> medications;
-
 }
