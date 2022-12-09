@@ -7,7 +7,9 @@ import com.redcode.drones.model.DroneDto;
 import com.redcode.drones.model.MedicationDto;
 import com.redcode.drones.repositories.DroneDao;
 import com.redcode.drones.repositories.MedicationDao;
+import com.redcode.drones.services.DroneAuditService;
 import com.redcode.drones.services.DroneService;
+import com.redcode.drones.utils.Constant;
 import com.redcode.drones.utils.mapper.DroneMapper;
 import com.redcode.drones.utils.mapper.MedicationMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class DroneServiceImp implements DroneService {
     final DroneMapper droneMapper;
     final MedicationDao medicationDao;
     final MedicationMapper medicationMapper;
+    final DroneAuditService droneAuditService;
 
 
     @Override
@@ -43,9 +46,12 @@ public class DroneServiceImp implements DroneService {
     @Override
     public DroneDto loadingDroneWithMedication(List<String> medicationCodes, String serialNumber) throws Exception {
         Drone drone = droneDao.findDroneBySerialNumber(serialNumber);
-        if (drone != null && drone.getState().equals(State.IDLE)) {
+        if (drone != null) {
+            droneAuditService.saveDroneAction(drone.getSerialNumber(), Constant.LOADING_MEDICATION);
+            validateBatteryLevel(drone);
             List<Medication> medications = medicationDao.findMedicationsByCodeIn(medicationCodes);
             if (medications != null && medications.size() > 0) {
+                validateWeightLimit(drone.getWeightLimit(), drone.getSerialNumber(), medications);
                 drone.setMedications(medications);
                 drone.setState(State.LOADING);
                 drone.setBatteryCapacity(75);
@@ -54,6 +60,26 @@ public class DroneServiceImp implements DroneService {
                 throw new Exception(String.format("Cannot find the medication with this codes to drone with serial Number [%s] ", serialNumber));
         }
         throw new Exception(String.format("Cannot find the drone with this serial Number [%s] or this drone is not idle", serialNumber));
+    }
+
+    private void validateWeightLimit(Double weightLimit, String serialNumber, List<Medication> medications) throws Exception {
+        double sumOfWeight = 0;
+        for (Medication medication : medications) {
+            sumOfWeight += medication.getWeight();
+        }
+        if (sumOfWeight > weightLimit) {
+            droneAuditService.saveDroneAction(serialNumber, Constant.WEIGHT_VALIDATION);
+            throw new Exception(String.format("this done with serial number [%s] cannot load this weight", serialNumber));
+        }
+
+    }
+
+    private void validateBatteryLevel(Drone drone) throws Exception {
+        if (drone.getBatteryCapacity() < 25) {
+            droneAuditService.saveDroneAction(drone.getSerialNumber(), Constant.BATTERY_LEVEL_VALIDATION);
+            throw new Exception(String.format("this done with serial number [%s] is low battery to be loaded", drone.getSerialNumber()));
+        }
+
     }
 
     @Override
@@ -67,8 +93,14 @@ public class DroneServiceImp implements DroneService {
 
     @Override
     public List<DroneDto> getAvailableDrones() {
-        List<Drone> drones = droneDao.findAllByState(State.IDLE);
+        List<Drone> drones = droneDao.findByState(State.IDLE);
         return droneMapper.toDtoList(drones);
+    }
+
+    @Override
+    public List<Drone> getAvailableDronesForBatteryCharge() {
+        List<Drone> drones = droneDao.findByStateAndBatteryCapacityNot(State.IDLE, 100);
+        return drones;
     }
 
     @Override
@@ -78,5 +110,15 @@ public class DroneServiceImp implements DroneService {
             return drone.getBatteryCapacity();
         }
         throw new Exception(String.format("Cannot find the drone with this serial Number [%s] ", serialNumber));
+    }
+
+    @Override
+    public List<Drone> getAllDronesThatNotIdle() {
+        return droneDao.findAllByStateNot(State.IDLE);
+    }
+
+    @Override
+    public Drone save(Drone drone) {
+        return droneDao.save(drone);
     }
 }

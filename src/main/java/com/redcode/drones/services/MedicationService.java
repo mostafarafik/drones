@@ -1,5 +1,6 @@
 package com.redcode.drones.services;
 
+import com.redcode.drones.entities.Medication;
 import com.redcode.drones.model.MedicationDto;
 
 import java.util.List;
@@ -7,14 +8,16 @@ import java.util.Set;
 
 public interface MedicationService {
 
-    MedicationDto addNewMedication(MedicationDto medicationDto);
+    MedicationDto addNewMedication(MedicationDto medicationDto) throws Exception;
 
-    MedicationDto updateExistMedicationByCode(MedicationDto updatedMedicationDto, Integer id);
+    MedicationDto updateExistMedicationById(MedicationDto updatedMedicationDto, Integer id) throws Exception;
 
-    void deleteExistMedicationByCode(Integer id);
+    void deleteExistMedicationById(Integer id) throws Exception;
 
-    MedicationDto getExistMedicationByCode(String code);
+    MedicationDto getExistMedicationByCode(String code) throws Exception;
 
-    List<MedicationDto> getAllMedications();
+    List<MedicationDto> getAllMedications() throws Exception;
+
+    Medication save(Medication medication) ;
 
 }

@@ -9,5 +9,7 @@ import java.util.Set;
 
 public interface DroneDao extends JpaRepository<Drone,Integer> {
     Drone findDroneBySerialNumber(String serialNumber);
-    List<Drone> findAllByState(State state);
+    List<Drone> findByState(State state);
+    List<Drone> findByStateAndBatteryCapacityNot(State state,Integer batteryLevel);
+    List<Drone> findAllByStateNot(State state);
 }

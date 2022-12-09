@@ -1,5 +1,6 @@
 package com.redcode.drones.services;
 
+import com.redcode.drones.entities.Drone;
 import com.redcode.drones.model.DroneDto;
 import com.redcode.drones.model.MedicationDto;
 
@@ -16,6 +17,11 @@ public interface DroneService {
 
     List<DroneDto> getAvailableDrones() throws Exception;
 
+    List<Drone> getAvailableDronesForBatteryCharge() throws Exception;
     Integer getBatteryLevel(String serialNumber) throws Exception;
+
+    List<Drone> getAllDronesThatNotIdle();
+
+    Drone save(Drone drone);
 
 }

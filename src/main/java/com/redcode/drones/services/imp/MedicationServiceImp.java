@@ -8,11 +8,8 @@ import com.redcode.drones.utils.mapper.MedicationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -31,7 +28,7 @@ public class MedicationServiceImp implements MedicationService {
     }
 
     @Override
-    public MedicationDto updateExistMedicationByCode(MedicationDto updatedMedicationDto, Integer id) {
+    public MedicationDto updateExistMedicationById(MedicationDto updatedMedicationDto, Integer id) throws Exception {
 
         Medication medication = medicationDao.findById(id).get();
         if (medication != null) {
@@ -39,33 +36,38 @@ public class MedicationServiceImp implements MedicationService {
             medication = updateMedication(medication, updatedMedication);
             return medicationMapper.toDto(medicationDao.save(medication));
         }
-        return null;
+        throw new Exception(String.format("Cannot find the Medication with this Id [%s] ", id));
     }
 
     private Medication updateMedication(Medication medication, Medication updatedMedication) {
         medication.setCode(updatedMedication.getCode());
         medication.setName(updatedMedication.getName());
         medication.setWeight(updatedMedication.getWeight());
-        if (updatedMedication.getImage() != null)
-            medication.setImage(updatedMedication.getImage());
+        if (updatedMedication.getImage() != null) medication.setImage(updatedMedication.getImage());
         return medication;
     }
 
     @Override
-    public void deleteExistMedicationByCode(Integer id) {
+    public void deleteExistMedicationById(Integer id) throws Exception {
         Medication medication = medicationDao.findById(id).get();
-        if (medication != null)
-            medicationDao.delete(medication);
+        if (medication != null) medicationDao.delete(medication);
+        else throw new Exception(String.format("Cannot find the Medication with this Id [%s] ", id));
     }
 
     @Override
-    public MedicationDto getExistMedicationByCode(String code) {
+    public MedicationDto getExistMedicationByCode(String code) throws Exception {
         Medication medication = medicationDao.findMedicationByCode(code);
-        return medicationMapper.toDto(medication);
+        if (medication != null) return medicationMapper.toDto(medication);
+        throw new Exception(String.format("Cannot find the Medication with this code [%s] ", code));
     }
 
     @Override
     public List<MedicationDto> getAllMedications() {
         return medicationMapper.toDtoList(medicationDao.findAll());
+    }
+
+    @Override
+    public Medication save(Medication medication) {
+        return medicationDao.save(medication);
     }
 }
